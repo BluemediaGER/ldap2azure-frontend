@@ -1,0 +1,85 @@
+<template>
+    <div id="navbar">
+        <img class="logo" alt="ldap2azure Logo" src="@/assets/logo.png">
+        <div class="nav-menu">
+            <router-link :to="'/dashboard'">Dashboard</router-link>
+            <router-link :to="'/users'">Users</router-link>
+            <router-link :to="'/syncs'">Syncs</router-link>
+            <router-link :to="'/'">API Credentials</router-link>
+        </div>
+        <span class="spacer"></span>
+        <AccountDropdown class="dropdown" :username="$store.getters['auth/getUsername']"/>
+    </div>
+</template>
+
+<script>
+    import AccountDropdown from "./AccountDropdown";
+    export default {
+        name: "Navbar",
+        components: {AccountDropdown},
+    }
+</script>
+
+<style scoped>
+    #navbar {
+        height: 70px;
+        display: flex;
+        justify-content: left;
+        flex-wrap: nowrap;
+        overflow: hidden;
+        background-color: #f8f8f8;
+        box-shadow: 0 1px 6px 0 #888888;
+    }
+
+    .logo {
+        height: 70%;
+        margin-left: 40px;
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .nav-menu {
+        display: flex;
+        padding-left: 40px;
+        align-items: center;
+    }
+
+    .nav-menu > a {
+        color: #323336;
+        font-size: 18px;
+        margin: 0 8px;
+        text-decoration: none;
+        cursor: pointer;
+        background-image: linear-gradient( transparent 2px, #f4505d 2px, #f4505d 4px, transparent 4px ), linear-gradient( transparent 2px, #d8dce9 2px, #d8dce9 4px, transparent 4px );
+        background-size: 0 6px, 100% 6px;
+        background-position: 0 bottom, 0 bottom;
+        transition: background-size 0.3s ease-in-out;
+        background-repeat: no-repeat;
+        padding-bottom: 4px;
+    }
+    .nav-menu > a:hover {
+        background-size: 100% 6px;
+    }
+    @supports (-ms-ime-align:auto) {
+        .nav-menu > a,.nav-menu > a:visited {
+            background-image: linear-gradient(#f4505d, #f4505d), linear-gradient(#d8dce9, #d8dce9);
+            background-size: 0 2px, 100% 2px;
+            padding-bottom: 2px;
+        }
+        .nav-menu > a:hover {
+            background-size: 100% 2px;
+        }
+    }
+    .nav-menu > a.router-link-exact-active {
+        color: #f4505d;
+        background-size: 100% 6px;
+    }
+
+    .spacer {
+        flex-grow: 2;
+    }
+    .dropdown {
+        margin-right: 40px;
+    }
+</style>
