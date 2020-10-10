@@ -30,6 +30,13 @@ export default {
         },
         ack: async function () {
             await axios.get("/api/auth/ack")
+        },
+        changePassword: async function(context, password) {
+            try {
+                return await axios.put("/api/auth/api-user/password", {password: password});
+            } catch (error) {
+                return {error: true, code: error.response.status, data: error.response.data};
+            }
         }
     },
     modules: {

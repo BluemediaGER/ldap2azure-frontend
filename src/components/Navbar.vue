@@ -8,15 +8,61 @@
             <router-link :to="'/'">API Credentials</router-link>
         </div>
         <span class="spacer"></span>
-        <AccountDropdown class="dropdown" :username="$store.getters['auth/getUsername']"/>
+        <AccountDropdown
+            class="dropdown"
+            :username="$store.getters['auth/getUsername']"
+            @changePassword="showPasswordChangeModal = true"
+            @logout="logout"
+        />
+        <PasswordChangeModal
+            v-if="showPasswordChangeModal"
+            @close="showPasswordChangeModal = false"
+            @success="passwordOk"
+            @error="passwordError"
+        />
+        <ChoiceModal
+            v-if="showPasswordInfoModal"
+            :body="passwordInfoModalBody"
+            :choices="[{text: 'OK', eventName: 'close'}]"
+            @close="showPasswordInfoModal = false"
+        />
     </div>
 </template>
 
 <script>
     import AccountDropdown from "./AccountDropdown";
+    import PasswordChangeModal from "./PasswordChangeModal";
+    import ChoiceModal from "./ChoiceModal";
     export default {
         name: "Navbar",
-        components: {AccountDropdown},
+        components: {
+            AccountDropdown,
+            PasswordChangeModal,
+            ChoiceModal
+        },
+        data: function () {
+            return {
+                showPasswordChangeModal : false,
+                showPasswordInfoModal: false,
+                passwordInfoModalBody: ""
+            }
+        },
+        methods: {
+            logout: function () {
+                this.$store.dispatch("auth/logout");
+                this.$router.replace("/");
+            },
+            passwordOk: function () {
+                this.showPasswordChangeModal = false;
+                this.passwordInfoModalBody = "Your password was changed successfully.";
+                this.showPasswordInfoModal = true;
+            },
+            passwordError: function () {
+                this.showPasswordChangeModal = false;
+                this.passwordInfoModalBody = "An error occurred while changing your password. Please try again.";
+                this.showPasswordInfoModal = true;
+            }
+        }
     }
 </script>
 

@@ -2,45 +2,24 @@
     <div>
         <div class="wrapper">
             <div class="dropdown">
-                <a class="trigger-drop">{{ username }}<i class="arrow"></i></a>
+                <div class="trigger-drop-wrapper">
+                    <a class="trigger-drop">{{ username }}</a>
+                    <i class="arrow"></i>
+                </div>
                 <div class="drop">
-                    <a @click.prevent="showPasswordChangeModal = true">Change password</a>
-                    <a @click.prevent="logout">Logout</a>
+                    <a @click.prevent="$emit('changePassword')">Change Password</a>
+                    <a @click.prevent="$emit('logout')">Logout</a>
                 </div>
             </div>
         </div>
-        <ChoiceModal
-            v-if="showPasswordInfoModal"
-            :body="passwordInfoModalBody"
-            :choices="[{text: 'OK', eventName: 'close'}]"
-            @close="showPasswordInfoModal === false"
-        />
     </div>
 </template>
 
 <script>
-    import ChoiceModal from "./ChoiceModal";
     export default {
         name: "AccountDropdown",
-        components: {ChoiceModal},
         props: {
             username: String
-        },
-        data: function () {
-            return {
-                showPasswordChangeModal : false,
-                showPasswordInfoModal: false,
-                passwordInfoModalBody: "Your password was changed successfully."
-            }
-        },
-        methods: {
-            logout: function () {
-                this.$store.dispatch("auth/logout");
-                this.$router.replace("/");
-            },
-            changePassword: function (password) {
-
-            }
         }
     }
 </script>
@@ -53,10 +32,28 @@
         justify-content: center;
         cursor: pointer;
     }
+    .trigger-drop-wrapper {
+        display: flex;
+    }
     .trigger-drop {
         font-size: 18px;
         color: #323336;
         border: none;
+    }
+    .arrow {
+        display: block;
+        width: 8px;
+        height: 8px;
+        left: 50%; top: 50%;
+        margin-top: 10px;
+        margin-left: 15px;
+        border-width: 2px;
+        border-style: solid;
+        border-color: transparent;
+        border-bottom-color: #323336;
+        border-right-color: #323336;
+
+        transform: translate(-50%, -50%) rotate(45deg);
     }
     .drop {
         display: none;
