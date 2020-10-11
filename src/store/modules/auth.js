@@ -34,8 +34,13 @@ export default {
             context.commit("SET_USERNAME", "");
             context.commit("SET_LOGIN_STATE", false);
         },
-        ack: async function () {
+        ack: async function (context) {
             await axios.get("/api/auth/ack")
+            context.commit("SET_USERNAME", "");
+            context.commit("SET_LOGIN_STATE", false);
+        },
+        reset: function() {
+            axios.get("/api/auth/logout");
         },
         changePassword: async function(context, password) {
             try {
