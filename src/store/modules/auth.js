@@ -3,11 +3,15 @@ import axios from "axios";
 export default {
     namespaced: true,
     state: {
-        username: ""
+        username: "",
+        loggedIn: false
     },
     mutations: {
         SET_USERNAME(state, username) {
             state.username = username;
+        },
+        SET_LOGIN_STATE(state, loggedIn) {
+            state.loggedIn = loggedIn;
         }
     },
     actions: {
@@ -19,6 +23,7 @@ export default {
             try {
                 let result = await axios.post("/api/auth/login", formData);
                 context.commit("SET_USERNAME", username);
+                context.commit("SET_LOGIN_STATE", true);
                 return result.data;
             } catch (error) {
                 return {error: true, code: error.response.status, data: error.response.data};
@@ -27,6 +32,7 @@ export default {
         logout: async function (context) {
             await axios.get("/api/auth/logout");
             context.commit("SET_USERNAME", "");
+            context.commit("SET_LOGIN_STATE", false);
         },
         ack: async function () {
             await axios.get("/api/auth/ack")
@@ -44,11 +50,15 @@ export default {
     getters: {
         getUsername(state) {
             return state.username;
+        },
+        getLoginState(state) {
+            return state.loggedIn;
         }
     },
     computed: {
         ...mapGetters([
-            'getUsername'
+            "getUsername",
+            "getLoginState"
         ])
     }
 };

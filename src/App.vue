@@ -11,6 +11,23 @@
         name: 'App',
         components: {
             Navbar
+        },
+        data() {
+            return {
+                apiAckTimer: null
+            }
+        },
+        created() {
+            this.unwatch = this.$store.watch((state) => state.auth.loggedIn, (newValue) => {
+                if (newValue) {
+                    this.apiAckTimer = setInterval(() => this.$store.dispatch("auth/ack"), 300000);
+                } else {
+                    clearInterval(this.apiAckTimer);
+                }
+            });
+        },
+        beforeDestroy() {
+            this.unwatch();
         }
     }
 </script>
