@@ -8,10 +8,24 @@ export default {
     },
     mutations: {
         SET_USERNAME(state, username) {
+            try {
+                localStorage.setItem("username", username);
+            } catch {}
             state.username = username;
         },
         SET_LOGIN_STATE(state, loggedIn) {
+            try {
+                localStorage.setItem("loggedIn", loggedIn);
+            } catch {}
             state.loggedIn = loggedIn;
+        },
+        initLocalStorage(state) {
+            if (localStorage.getItem("username")) {
+                state.username = localStorage.getItem("username");
+            }
+            if (localStorage.getItem("loggedIn")) {
+                state.loggedIn = localStorage.getItem("loggedIn");
+            }
         }
     },
     actions: {

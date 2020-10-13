@@ -38,7 +38,6 @@
                     await this.$router.replace("/");
                 }
                 this.dashboard = result;
-                console.dir(this.dashboard);
                 this.isLoading = false;
             }
         },
