@@ -84,6 +84,7 @@
         color: #fff;
         box-shadow: 1px 1px 4px #DADADA;
         border-radius: 5px;
+        cursor: pointer;
     }
 
     /*
