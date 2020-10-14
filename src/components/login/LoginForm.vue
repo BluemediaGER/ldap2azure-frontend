@@ -11,7 +11,7 @@
 </template>
 
 <script>
-    import ErrorBox from "./ErrorBox";
+    import ErrorBox from "../general/ErrorBox";
 
     export default {
         name: "LoginForm",

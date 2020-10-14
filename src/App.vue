@@ -7,8 +7,8 @@
 </template>
 
 <script>
-    import Navbar from "./components/Navbar";
-    import StorageWarningBanner from "./components/StorageWarningBanner";
+    import Navbar from "./components/navbar/Navbar";
+    import StorageWarningBanner from "./components/general/StorageWarningBanner";
     export default {
         name: 'App',
         components: {

@@ -6,8 +6,8 @@
 </template>
 
 <script>
-    import LogoText from "../components/LogoText";
-    import LoginForm from "../components/LoginForm";
+    import LogoText from "../components/login/LogoText";
+    import LoginForm from "../components/login/LoginForm";
     export default {
         name: "Login",
         components: {

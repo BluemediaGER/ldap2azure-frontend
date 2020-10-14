@@ -32,7 +32,7 @@
 <script>
     import AccountDropdown from "./AccountDropdown";
     import PasswordChangeModal from "./PasswordChangeModal";
-    import ChoiceModal from "./ChoiceModal";
+    import ChoiceModal from "../general/ChoiceModal";
     export default {
         name: "Navbar",
         components: {

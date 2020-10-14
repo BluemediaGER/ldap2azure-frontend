@@ -20,7 +20,7 @@
 
 <script>
     import NumberCard from "../components/dashboard/NumberCard";
-    import Loader from "../components/Loader";
+    import Loader from "../components/general/Loader";
     export default {
         name: 'Dashboard',
         components: {Loader, NumberCard},
