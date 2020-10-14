@@ -22,7 +22,11 @@
             }
         },
         created() {
-            // Init global api timer to prevent session timeouts while the page is opened
+            // Init ack timer on page load if login state is true
+            if (this.$store.getters["auth/getLoginState"]) {
+                this.apiAckTimer = setInterval(() => this.$store.dispatch("auth/ack"), 300000);
+            }
+            // Watch for login state changes and start / stop ack timer accordingly
             this.unwatch = this.$store.watch((state) => state.auth.loggedIn, (newValue) => {
                 if (newValue) {
                     this.apiAckTimer = setInterval(() => this.$store.dispatch("auth/ack"), 300000);

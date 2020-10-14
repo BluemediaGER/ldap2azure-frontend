@@ -18,17 +18,17 @@ export default {
                 localStorage.setItem("loggedIn", loggedIn);
             } catch {}
             state.loggedIn = loggedIn;
-        },
-        initLocalStorage(state) {
-            if (localStorage.getItem("username")) {
-                state.username = localStorage.getItem("username");
-            }
-            if (localStorage.getItem("loggedIn")) {
-                state.loggedIn = localStorage.getItem("loggedIn");
-            }
         }
     },
     actions: {
+        initLocalStorage: function (context) {
+            if (localStorage.getItem("username")) {
+                context.commit("SET_USERNAME", localStorage.getItem("username"));
+            }
+            if (localStorage.getItem("loggedIn")) {
+                context.commit("SET_LOGIN_STATE", (localStorage.getItem("loggedIn") === "true"));
+            }
+        },
         login: async function (context, {username, password}) {
             const formData = new FormData();
             formData.append('username', username);
@@ -48,13 +48,13 @@ export default {
             context.commit("SET_USERNAME", "");
             context.commit("SET_LOGIN_STATE", false);
         },
-        ack: async function (context) {
+        ack: async function () {
             await axios.get("/api/auth/ack")
+        },
+        reset: function(context) {
+            axios.get("/api/auth/logout");
             context.commit("SET_USERNAME", "");
             context.commit("SET_LOGIN_STATE", false);
-        },
-        reset: function() {
-            axios.get("/api/auth/logout");
         },
         changePassword: async function(context, password) {
             try {

@@ -15,7 +15,7 @@ export default {
             try {
                 if (typeof (Storage) !== "undefined") {
                     context.commit("SET_STORAGE_SUPPORT", true);
-                    context.commit("auth/initLocalStorage", null, {root: true});
+                    context.dispatch("auth/initLocalStorage", null, {root: true});
                 }
             } catch {
                 context.commit("SET_STORAGE_SUPPORT", false);
