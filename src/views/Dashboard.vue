@@ -14,6 +14,10 @@
                 <NumberCard class="number-card"
                             :count="dashboard.usersFailed" color="#f4505d" text="Failed Users" />
             </div>
+            <div class="table-card">
+                <p>Last Syncs to Azure AD</p>
+                <Table :data="tableData"/>
+            </div>
         </div>
     </div>
 </template>
@@ -21,24 +25,47 @@
 <script>
     import NumberCard from "../components/dashboard/NumberCard";
     import Loader from "../components/general/Loader";
+    import Table from "../components/general/Table";
     export default {
         name: 'Dashboard',
-        components: {Loader, NumberCard},
+        components: {Table, Loader, NumberCard},
         data() {
             return {
                 dashboard: {},
-                isLoading: true
+                isLoading: true,
+                tableData: {}
             }
         },
         methods: {
             loadData: async function () {
                 let result = await this.$store.dispatch("misc/getDashboard");
                 if (result.error) {
-                    await this.$store.dispatch("auth/reset");
+                    await this.$store.dispatch("auth/logout");
                     await this.$router.replace("/");
                 }
                 this.dashboard = result;
                 this.isLoading = false;
+                this.tableData = { columns: [
+                        "Sync Start",
+                        "Sync End",
+                        "Users Changed",
+                        "Users Created",
+                        "Users Deleted",
+                        "Users Failed"
+                    ],
+                    rows: []
+                };
+                this.dashboard.lastSyncs.forEach((sync) => {
+                    let row = [
+                        sync.syncBegin.replace("T", " "),
+                        sync.syncEnd.replace("T", " "),
+                        sync.usersChanged,
+                        sync.usersCreated,
+                        sync.usersDeleted,
+                        sync.usersFailed
+                    ];
+                    this.tableData.rows.push(row);
+                });
             }
         },
         created() {
@@ -61,8 +88,8 @@
     }
     .dash {
         display: flex;
+        align-items: center;
         flex-direction: column;
-        height: fit-content;
         padding: 30px;
     }
     .numbers {
@@ -73,5 +100,22 @@
     }
     .numbers > .number-card {
         margin: 20px;
+    }
+
+    .table-card {
+        display: flex;
+        flex-direction: column;
+        height: fit-content;
+        width: fit-content;
+        margin-top: 30px;
+        padding: 15px;
+        box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.20);
+        background: #f8f8f8;
+        border-radius: 5px;
+    }
+    .table-card > p {
+        font-size: 18px;
+        font-weight: bold;
+        margin: 0 0 10px;
     }
 </style>
