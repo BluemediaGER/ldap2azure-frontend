@@ -26,7 +26,7 @@
 
     table, th, td {
         border: 1px solid #ddd;
-        padding: 8px;
+        padding: 7px;
     }
 
     tr {
@@ -42,8 +42,8 @@
     }
 
     th {
-        padding-top: 12px;
-        padding-bottom: 12px;
+        padding-top: 10px;
+        padding-bottom: 10px;
         background-color: #485563;
         color: #f9f9f9;
     }

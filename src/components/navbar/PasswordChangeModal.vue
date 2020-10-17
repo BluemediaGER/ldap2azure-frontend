@@ -70,7 +70,7 @@
         min-width: 300px;
         margin: 0px auto;
         padding: 30px;
-        background-color: #fff;
+        background-color: #FAFAFC;
         border-radius: 6px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
         transition: all 0.3s ease;

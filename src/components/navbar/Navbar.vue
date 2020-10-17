@@ -73,7 +73,7 @@
         justify-content: left;
         flex-wrap: nowrap;
         overflow: hidden;
-        background-color: #f8f8f8;
+        background-color: #FAFAFC;
         box-shadow: 0 1px 6px 0 #888888;
     }
 

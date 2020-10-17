@@ -41,7 +41,7 @@
         max-height: 400px;
         padding: 5px;
         box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.20);
-        background: #f8f8f8;
+        background: #FAFAFC;
         border-radius: 5px;
         cursor: pointer;
     }
