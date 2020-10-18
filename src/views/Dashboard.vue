@@ -6,7 +6,7 @@
         <div v-if="!isLoading" class="dash">
             <div class="numbers">
                 <NumberCard class="number-card"
-                            :count="dashboard.userCount" text="Overall Users in ldap2azure" />
+                            :count="dashboard.userCount" text="Overall Users in Ldap2Azure" />
                 <NumberCard class="number-card"
                             :count="dashboard.usersFine" color="#00c43f" text="Users in Sync with source LDAP" />
                 <NumberCard class="number-card"

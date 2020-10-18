@@ -1,7 +1,7 @@
 <template>
     <table>
         <tr>
-            <th v-for="column in data.columns">{{ column }}</th>
+            <th v-for="column in data.columns"><span>{{ column }}</span></th>
         </tr>
         <tr v-for="row in data.rows">
             <td v-for="value in row">{{ value }}</td>
@@ -44,7 +44,9 @@
     th {
         padding-top: 10px;
         padding-bottom: 10px;
-        background-color: #485563;
-        color: #f9f9f9;
+        background-color: #FAFAFC;
+    }
+    th > span {
+        border-bottom: 2px solid #f4505d;
     }
 </style>
