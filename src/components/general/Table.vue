@@ -3,8 +3,8 @@
         <tr>
             <th v-for="column in data.columns"><span>{{ column }}</span></th>
         </tr>
-        <tr v-for="row in data.rows">
-            <td v-for="value in row">{{ value }}</td>
+        <tr v-for="row in data.rows" v-on:click="onClick(row.route)">
+            <td v-for="value in row.content">{{ value }}</td>
         </tr>
     </table>
 </template>
@@ -14,6 +14,11 @@
         name: "Table",
         props: {
             data: Object
+        },
+        methods: {
+            onClick(route) {
+                if (route) this.$router.push(route);
+            }
         }
     }
 </script>

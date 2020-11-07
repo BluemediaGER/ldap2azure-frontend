@@ -5,7 +5,7 @@
             <router-link :to="'/dashboard'">Dashboard</router-link>
             <router-link :to="'/users'">Users</router-link>
             <router-link :to="'/syncs'">Syncs</router-link>
-            <router-link :to="'/'">API Credentials</router-link>
+            <router-link exact :to="'/'">API Credentials</router-link>
         </div>
         <span class="spacer"></span>
         <AccountDropdown
@@ -48,9 +48,9 @@
             }
         },
         methods: {
-            logout: function () {
-                this.$store.dispatch("auth/logout");
-                this.$router.replace("/");
+            logout: async function () {
+                await this.$store.dispatch("auth/logout");
+                await this.$router.replace("/");
             },
             passwordOk: function () {
                 this.showPasswordChangeModal = false;
@@ -117,7 +117,7 @@
             background-size: 100% 2px;
         }
     }
-    .nav-menu > a.router-link-exact-active {
+    .nav-menu > a.router-link-active {
         color: #f4505d;
         background-size: 100% 6px;
     }

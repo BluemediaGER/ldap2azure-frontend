@@ -42,6 +42,7 @@
                 if (result.error) {
                     await this.$store.dispatch("auth/logout");
                     await this.$router.replace("/");
+                    return;
                 }
                 this.dashboard = result;
                 this.isLoading = false;
@@ -56,14 +57,16 @@
                     rows: []
                 };
                 this.dashboard.lastSyncs.forEach((sync) => {
-                    let row = [
-                        sync.syncBegin.replace("T", " "),
-                        sync.syncEnd.replace("T", " "),
-                        sync.usersChanged,
-                        sync.usersCreated,
-                        sync.usersDeleted,
-                        sync.usersFailed
-                    ];
+                    let row = {
+                        content: [
+                            sync.syncBegin.replace("T", " "),
+                            sync.syncEnd.replace("T", " "),
+                            sync.usersChanged,
+                            sync.usersCreated,
+                            sync.usersDeleted,
+                            sync.usersFailed
+                        ]
+                    };
                     this.tableData.rows.push(row);
                 });
             }
@@ -109,7 +112,7 @@
         width: fit-content;
         margin-top: 30px;
         padding: 15px;
-        box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.20);
+        box-shadow: 0 0 10px 1px rgba(0,0,0,0.20);
         background: #FAFAFC;
         border-radius: 5px;
     }

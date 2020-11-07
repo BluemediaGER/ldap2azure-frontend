@@ -13,6 +13,9 @@
         components: {
             LoginForm,
             LogoText
+        },
+        created() {
+            if (this.$store.getters["auth/getLoginState"]) this.$router.replace("/dashboard");
         }
     }
 </script>

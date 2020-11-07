@@ -44,7 +44,9 @@ export default {
             }
         },
         logout: async function (context) {
-            await axios.get("/api/auth/logout");
+            try {
+                await axios.get("/api/auth/logout");
+            } catch {}
             context.commit("SET_USERNAME", "");
             context.commit("SET_LOGIN_STATE", false);
         },
