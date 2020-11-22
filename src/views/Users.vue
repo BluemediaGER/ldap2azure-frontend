@@ -1,5 +1,5 @@
 <template>
-    <div class="user-listing">
+    <div class="user-list">
         <SelectMenu
             :options='[
                 {value: "all", text: "All Users"},
@@ -102,7 +102,7 @@
 </script>
 
 <style scoped>
-    .user-listing {
+    .user-list {
         padding: 30px;
     }
     .table-card {

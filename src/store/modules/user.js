@@ -17,6 +17,14 @@ export default {
             } catch (error) {
                 return {error: true, code: error.response.status, data: error.response.data};
             }
+        },
+        getUser: async function (state, id) {
+            try {
+                let result = await axios.get("/api/user/" + id);
+                return result.data;
+            } catch (error) {
+                return {error: true, code: error.response.status, data: error.response.data};
+            }
         }
     },
     modules: {
