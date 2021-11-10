@@ -1,42 +1,68 @@
 <template>
-    <div class="user-details">
-        <div v-if="!isLoading && !isError" class="content">
-            <div class="actions-card">
-                <p>Actions</p>
-                <div class="button-wrapper">
-                    <button class="red button" :disabled="user.syncState === 'ok' || user.syncState === 'pending'">
-                        Retry Sync
-                    </button>
-                    <button class="second red button" :disabled="user.syncState === 'ok' || user.syncState === 'pending'">
-                        Solve Sync Conflict
-                    </button>
+    <div>
+        <div v-if="isLoading" class="loaderWrapper">
+            <Loader />
+        </div>
+        <div class="user-details">
+            <LoaderModal v-if="showLoadingModal" :body="loadingModalText" />
+            <ChoiceModal v-if="showChoiceModal"
+                         :body="choiceModalText"
+                         :choices="choiceModalData"
+                         @close="showChoiceModal = false" />
+            <div v-if="!isLoading && !isError" class="content">
+                <div class="actions-card">
+                    <p>Actions</p>
+                    <div class="button-wrapper">
+                        <button v-on:click="retrySync"
+                                class="red button"
+                                :disabled="user.syncState === 'ok' ||
+                                user.syncState === 'pending' ||
+                                $store.getters['auth/getPermission'] === 'read'">
+                            Retry Sync
+                        </button>
+                        <button class="red button"
+                                :disabled="user.syncState === 'ok' ||
+                                user.syncState === 'pending' ||
+                                $store.getters['auth/getPermission'] === 'read'">
+                            Solve Sync Conflict
+                        </button>
+                    </div>
+                </div>
+                <div class="properties-card">
+                    <Table
+                        :data="table"
+                    />
                 </div>
             </div>
-            <div class="properties-card">
-                <Table
-                    :data="table"
-                />
+            <div v-if="!isLoading && isError" class="error-message">
+                <p>{{ error }}</p>
             </div>
-        </div>
-        <div v-if="!isLoading && isError" class="error-message">
-            <p>{{ error }}</p>
         </div>
     </div>
 </template>
 
 <script>
     import Table from "../components/general/Table";
+    import LoaderModal from "@/components/general/LoaderModal";
+    import ChoiceModal from "@/components/general/ChoiceModal";
+    import Loader from "@/components/general/Loader";
     export default {
         name: "UserDetails",
-        components: {Table},
+        components: {Loader, ChoiceModal, LoaderModal, Table},
         props: ['id'],
         data() {
             return {
                 error: "",
+                loadingModalText: "",
+                showLoadingModal: false,
+                choiceModalText: "",
+                choiceModalData: [],
+                showChoiceModal: false,
                 isLoading: true,
                 isError: false,
                 user: {},
-                table: {}
+                table: {},
+
             };
         },
         created() {
@@ -44,35 +70,73 @@
         },
         methods: {
             loadUser: async function() {
-                console.log("load called")
                 let result = await this.$store.dispatch("user/getUser", this.id);
                 if (result.error) {
                     if (result.code === 401) {
                         await this.$store.dispatch("auth/logout");
-                        await this.$router.replace("/");
+                        await this.$router.replace({ path: "/", query: { redirectUrl: "/users/" + this.id}});
                         return;
                     } else if (result.code === 404) {
                         this.error = "The user with the specified ID " + this.id + " was not found."
-                        this.isLoading = false;
+                        setTimeout(() => this.isLoading = false, 300);
                         this.isError = true;
                         return;
                     }
                 }
-                this.user = result;
+                this.updateUser(result);
+                setTimeout(() => this.isLoading = false, 300);
+            },
+            updateUser(user) {
+                this.user = user;
                 let content = [];
-                for (let property in result) {
-                    if (result.hasOwnProperty(property)) {
-                        content.push({content: [property, result[property]]});
+                for (let property in user) {
+                    if (user.hasOwnProperty(property)) {
+                        content.push({content: [property, user[property]]});
                     }
                 }
                 this.table = { columns: ["Property Name", "Value"], rows: content }
-                this.isLoading = false;
+            },
+            retrySync: async function() {
+                this.loadingModalText = "Trying to resync " + this.user.userPrincipalName + " to Azure AD..."
+                this.showLoadingModal = true;
+                let result = await this.$store.dispatch("user/retryUserSync", this.id);
+                if (result.code === 401) {
+                    await this.$store.dispatch("auth/logout");
+                    await this.$router.replace({ path: "/", query: { redirectUrl: "/users/" + this.id}});
+                    return;
+                } else if (result.code === 500) {
+                    this.choiceModalText = "The resync failed. The reported reason was:\n" + result.data.message;
+                    this.choiceModalData = [{color: "#ee3141", eventName: "close", text: "Close"}];
+                    setTimeout(() => {
+                        this.showLoadingModal = false;
+                        this.showChoiceModal = true;
+                    }, 500);
+                    return;
+                }
+                this.choiceModalText = "The resync was successful. The user was updated in Azure AD.";
+                this.choiceModalData = [{color: "#00c43f", eventName: "close", text: "Close"}];
+                setTimeout(() => {
+                    this.showLoadingModal = false;
+                    this.showChoiceModal = true;
+                    }, 500);
+                this.updateUser(result);
             }
         }
     }
 </script>
 
 <style scoped>
+    .loaderWrapper {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+    }
+    .loaderWrapper * {
+        max-width: 140px;
+    }
     .user-details {
         display: flex;
         flex-direction: row;
@@ -113,7 +177,7 @@
         width: 100%;
         display: flex;
     }
-    .second.button {
+    .button-wrapper:nth-child(1) {
         margin-left: 10px;
     }
     .red {

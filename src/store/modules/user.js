@@ -25,6 +25,31 @@ export default {
             } catch (error) {
                 return {error: true, code: error.response.status, data: error.response.data};
             }
+        },
+        retryUserSync: async function (state, id) {
+            try {
+                let result = await axios.post("/api/user/" + id + "/retry");
+                return result.data;
+            } catch (error) {
+                return {error: true, code: error.response.status, data: error.response.data};
+            }
+        },
+        getUserSyncConflicts: async function (state, id) {
+            try {
+                let result = await axios.get("/api/user/" + id + "/conflicts");
+                return result.data;
+            } catch (error) {
+                return {error: true, code: error.response.status, data: error.response.data};
+            }
+        },
+        resolveUserSyncConflict: async function (state, userId, azureImmutableId, strategy) {
+            let requestObject = {azureImmutableId, strategy}
+            try {
+                let result = await axios.post("/api/user/" + userId + "/conflicts/resolve", requestObject);
+                return result.data;
+            } catch (error) {
+                return {error: true, code: error.response.status, data: error.response.data};
+            }
         }
     },
     modules: {

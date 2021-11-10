@@ -2,10 +2,22 @@
     <div id="navbar">
         <img class="logo" alt="ldap2azure Logo" src="@/assets/logo.png">
         <div class="nav-menu">
-            <router-link :to="'/dashboard'">Dashboard</router-link>
-            <router-link :to="'/users'">Users</router-link>
-            <router-link :to="'/syncs'">Syncs</router-link>
-            <router-link exact :to="'/'">API Credentials</router-link>
+            <router-link :to="'/dashboard'">
+                <img class="menu-icon" src="@/assets/icons/activity.svg">
+                <span>Dashboard</span>
+            </router-link>
+            <router-link :to="'/users'">
+                <img class="menu-icon" src="@/assets/icons/user.svg">
+                <span>Users</span>
+            </router-link>
+            <router-link :to="'/syncs'">
+                <img class="menu-icon" src="@/assets/icons/refresh-cw.svg">
+                <span>Syncs</span>
+            </router-link>
+            <router-link exact :to="'/'">
+                <img class="menu-icon" src="@/assets/icons/key.svg">
+                <span>API Credentials</span>
+            </router-link>
         </div>
         <span class="spacer"></span>
         <AccountDropdown
@@ -120,6 +132,12 @@
     .nav-menu > a.router-link-active {
         color: #f4505d;
         background-size: 100% 6px;
+    }
+    .menu-icon {
+        stroke: #323336;
+        height: 15px;
+        width: auto;
+        margin-right: 4px;
     }
 
     .spacer {

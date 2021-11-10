@@ -1,23 +1,33 @@
 <template>
-    <div class="user-list">
-        <SelectMenu
-            :options='[
-                {value: "all", text: "All Users"},
-                {value: "ok", text: "Fine Users"},
-                {value: "pending", text: "Pending Users"},
-                {value: "failed", text: "Failed Users"}
-            ]'
-            :default="filter"
-            @selected="filterSelected"
-        />
-        <div class="table-card">
-            <div v-if="isLoading" class="loaderWrapper">
-                <Loader />
+    <div>
+        <div v-if="isLoading" class="loaderWrapper">
+            <Loader />
+        </div>
+        <div class="user-list">
+            <div v-if="!isLoading" class="table-wrapper">
+                <div class="select-menu-wrapper">
+                    <SelectMenu
+                        class="select-menu"
+                        :options='[
+                            {value: "all", text: "All Users"},
+                            {value: "ok", text: "Fine Users"},
+                            {value: "pending", text: "Pending Users"},
+                            {value: "failed", text: "Failed Users"}
+                        ]'
+                        :default="filter"
+                        @selected="filterSelected"
+                    />
+                </div>
+                <Table
+                    v-if="tableData.rows.length > 0"
+                    class="table"
+                    :data="tableData"
+                />
+                <div v-if="tableData.rows.length === 0" class="empty-state">
+                        <img class="none-icon" src="@/assets/icons/user.svg">
+                        <span>There is nothing to see here.</span>
+                </div>
             </div>
-            <Table
-                v-if="!isLoading"
-                :data="tableData"
-            />
         </div>
     </div>
 </template>
@@ -36,12 +46,9 @@
                 currentPage: 0,
                 tableData: {
                     columns: [
-                        "ID",
                         "Display Name",
                         "User Principal Name",
-                        "Change State",
                         "Sync State",
-                        "Last Changed"
                     ],
                     rows: []
                 }
@@ -63,7 +70,7 @@
                 if (result.error) await this.onRequestDenied();
                 this.tableData.rows = [];
                 this.addTableData(result);
-                this.isLoading = false;
+                setTimeout(() => this.isLoading = false, 300);
             },
             loadNext: async function() {
                 let result = await this.$store.dispatch("user/getDashboard", this.filter, this.currentPage++);
@@ -76,12 +83,9 @@
                     let row = {
                         route: "/users/" + user._id,
                         content: [
-                            user._id,
                             user.displayName,
                             user.userPrincipalName,
-                            user.changeState,
-                            user.syncState,
-                            user.lastChanged.replace("T", " ")
+                            user.syncState.charAt(0).toUpperCase() + user.syncState.slice(1)
                         ]
                     };
                     this.tableData.rows.push(row);
@@ -89,7 +93,7 @@
             },
             onRequestDenied: async function() {
                 await this.$store.dispatch("auth/logout");
-                await this.$router.replace("/");
+                await this.$router.replace({ path: "/", query: { redirectUrl: "/users"}});
             }
         },
         created() {
@@ -103,27 +107,51 @@
 
 <style scoped>
     .user-list {
-        padding: 30px;
-    }
-    .table-card {
+        width: 100%;
+        padding-top: 30px;
         display: flex;
         flex-direction: column;
-        height: fit-content;
-        min-height: 400px;
-        margin-top: 30px;
-        padding: 15px;
-        box-shadow: 0 0 10px 1px rgba(0,0,0,0.20);
-        background: #FAFAFC;
-        border-radius: 5px;
+        align-items: center;
     }
     .loaderWrapper {
+        position: absolute;
         display: flex;
-        height: max-content;
-        flex-grow: 1;
         justify-content: center;
         align-items: center;
+        height: 100%;
+        width: 100%;
     }
     .loaderWrapper * {
         max-width: 140px;
+    }
+    .table-wrapper {
+        width: 75%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .select-menu-wrapper {
+        width: 100%;
+        display: flex;
+        align-items: flex-start;
+    }
+    .select-menu {
+        margin-bottom: 30px;
+    }
+    .table {
+        width: 100%;
+    }
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #323336;
+        font-size: 20px;
+    }
+    .empty-state > img {
+        width: 100px;
+        fill: #323336;
+        margin-bottom: 10px;
     }
 </style>

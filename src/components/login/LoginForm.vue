@@ -15,6 +15,9 @@
 
     export default {
         name: "LoginForm",
+        props: {
+            redirectUrl: String
+        },
         components: {
             ErrorBox
         },
@@ -38,6 +41,10 @@
                     }
                     this.showError = true;
                     event.target[1].value = "";
+                    return;
+                }
+                if (this.redirectUrl) {
+                    await this.$router.replace(this.redirectUrl);
                     return;
                 }
                 await this.$router.replace("/dashboard");

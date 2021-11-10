@@ -4,7 +4,8 @@ export default {
     namespaced: true,
     state: {
         username: "",
-        loggedIn: false
+        loggedIn: false,
+        permission: ""
     },
     mutations: {
         SET_USERNAME(state, username) {
@@ -18,6 +19,12 @@ export default {
                 localStorage.setItem("loggedIn", loggedIn);
             } catch {}
             state.loggedIn = loggedIn;
+        },
+        SET_PERMISSION(state, permission) {
+            try {
+                localStorage.setItem("permission", permission);
+            } catch {}
+            state.permission = permission;
         }
     },
     actions: {
@@ -27,6 +34,9 @@ export default {
             }
             if (localStorage.getItem("loggedIn")) {
                 context.commit("SET_LOGIN_STATE", (localStorage.getItem("loggedIn") === "true"));
+            }
+            if (localStorage.getItem("permission")) {
+                context.commit("SET_PERMISSION", localStorage.getItem("permission"));
             }
         },
         login: async function (context, {username, password}) {
@@ -38,6 +48,7 @@ export default {
                 let result = await axios.post("/api/auth/login", formData);
                 context.commit("SET_USERNAME", username);
                 context.commit("SET_LOGIN_STATE", true);
+                context.commit("SET_PERMISSION", result.data.permission);
                 return result.data;
             } catch (error) {
                 return {error: true, code: error.response.status, data: error.response.data};
@@ -49,6 +60,7 @@ export default {
             } catch {}
             context.commit("SET_USERNAME", "");
             context.commit("SET_LOGIN_STATE", false);
+            context.commit("SET_PERMISSION", "");
         },
         ack: async function () {
             await axios.get("/api/auth/ack")
@@ -69,12 +81,16 @@ export default {
         },
         getLoginState(state) {
             return state.loggedIn;
+        },
+        getPermission(state) {
+            return state.permission;
         }
     },
     computed: {
         ...mapGetters([
             "getUsername",
-            "getLoginState"
+            "getLoginState",
+            "getPermission"
         ])
     }
 };

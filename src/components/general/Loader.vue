@@ -10,8 +10,8 @@
 
 <style scoped>
     .spinner {
-        animation: spin 1.5s ease-in-out infinite;
-        -webkit-animation: spin 1.5s ease-in-out infinite;
+        animation: spin 1s ease-in-out infinite;
+        -webkit-animation: spin 1s ease-in-out infinite;
     }
     @keyframes spin {
         to {

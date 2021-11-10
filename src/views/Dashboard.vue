@@ -6,16 +6,20 @@
         <div v-if="!isLoading" class="dash">
             <div class="numbers">
                 <NumberCard class="number-card"
-                            :count="dashboard.userCount" text="Overall Users in Ldap2Azure" />
+                            :count="dashboard.userCount" text="Overall Users in Ldap2Azure"
+                            @click="pushUserRoute" />
                 <NumberCard class="number-card"
-                            :count="dashboard.usersFine" color="#00c43f" text="Users in Sync with source LDAP" />
+                            :count="dashboard.usersFine" color="#00c43f" text="Users in Sync with source LDAP"
+                            @click="pushUserRoute('ok')" />
                 <NumberCard class="number-card"
-                            :count="dashboard.usersPending" color="#ffbc00" text="Pending Users" />
+                            :count="dashboard.usersPending" color="#ffbc00" text="Pending Users"
+                            @click="pushUserRoute('pending')" />
                 <NumberCard class="number-card"
-                            :count="dashboard.usersFailed" color="#f4505d" text="Failed Users" />
+                            :count="dashboard.usersFailed" color="#f4505d" text="Failed Users"
+                            @click="pushUserRoute('failed')" />
             </div>
             <div class="table-card">
-                <p>Last Syncs to Azure AD</p>
+                <p>Latest Syncs to Azure AD</p>
                 <Table :data="tableData"/>
             </div>
         </div>
@@ -41,11 +45,10 @@
                 let result = await this.$store.dispatch("misc/getDashboard");
                 if (result.error) {
                     await this.$store.dispatch("auth/logout");
-                    await this.$router.replace("/");
+                    await this.$router.replace({ path: "/", query: { redirectUrl: "/dashboard"}});
                     return;
                 }
                 this.dashboard = result;
-                this.isLoading = false;
                 this.tableData = { columns: [
                         "Sync Start",
                         "Sync End",
@@ -69,6 +72,15 @@
                     };
                     this.tableData.rows.push(row);
                 });
+                setTimeout(() => this.isLoading = false, 300);
+            },
+            pushUserRoute: async function(filter) {
+                console.log("pushUserRoute triggered");
+                if (!filter) {
+                    await this.$router.push("/users");
+                    return;
+                }
+                await this.$router.push("/users?filter=" + filter);
             }
         },
         created() {

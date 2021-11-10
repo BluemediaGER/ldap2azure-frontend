@@ -3,19 +3,10 @@
         <div class="modal-mask">
             <div class="modal-wrapper">
                 <div class="modal-container">
-                    <div class="modal-body">
+                    <Loader class="modal-loader"/>
+                    <p class="modal-body">
                         {{ body }}
-                    </div>
-
-                    <div class="modal-buttons">
-                        <button
-                            v-for="choice in choices"
-                            :style="{ background: choice.color ? choice.color : '#4ec0ec'}"
-                            class="modal-default-button" @click="$emit(choice.eventName)"
-                        >
-                            {{ choice.text }}
-                        </button>
-                    </div>
+                    </p>
                 </div>
             </div>
         </div>
@@ -23,11 +14,12 @@
 </template>
 
 <script>
+    import Loader from "@/components/general/Loader";
     export default {
-        name: "ChoiceModal",
+        name: "LoaderModal",
+        components: {Loader},
         props: {
-            body: String,
-            choices: Array
+            body: String
         }
     }
 </script>
@@ -54,38 +46,22 @@
         width: fit-content;
         min-width: 300px;
         margin: 0px auto;
-        padding: 20px 30px;
+        padding: 50px;
         background-color: #FAFAFC;
         border-radius: 6px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
         transition: all 0.3s ease;
-        font-family: Helvetica, Arial, sans-serif;
+    }
+
+    .modal-loader {
+        width: 100px;
+        height: 100px;
     }
 
     .modal-body {
-        margin: 20px 0;
-        white-space: pre-wrap;
-    }
-
-    .modal-buttons {
-        margin-left: 10px;
-        margin-right: 10px;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .modal-default-button {
-        margin-left: 5px;
-        margin-right: 5px;
-
-        border: none;
-        padding: 8px 15px;
-        color: #fff;
-        box-shadow: 1px 1px 4px #DADADA;
-        border-radius: 5px;
-        cursor: pointer;
+        margin-bottom: 0;
+        margin-top: 40px;
+        font-family: 'Poppins', sans-serif;
     }
 
     /*

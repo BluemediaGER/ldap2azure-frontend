@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="card" @click="$emit('click')">
         <p class="number" :style="{color: color}">{{ count }}</p>
         <p class="description">{{ text }}</p>
     </div>
@@ -20,10 +20,6 @@
             color: {
                 default: "#323336",
                 type: String
-            },
-            onClick: {
-                default: () => null,
-                type: Function
             }
         }
     }

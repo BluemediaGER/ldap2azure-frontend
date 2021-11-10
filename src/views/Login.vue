@@ -1,7 +1,7 @@
 <template>
     <div class="login">
         <LogoText class="brand"/>
-        <LoginForm class="form"/>
+        <LoginForm class="form" :redirect-url="this.redirectUrl"/>
     </div>
 </template>
 
@@ -14,8 +14,16 @@
             LoginForm,
             LogoText
         },
+        data() {
+            return {
+                redirectUrl: undefined
+            }
+        },
         created() {
             if (this.$store.getters["auth/getLoginState"]) this.$router.replace("/dashboard");
+            if (this.$route.query.redirectUrl) {
+                this.redirectUrl = this.$route.query.redirectUrl;
+            }
         }
     }
 </script>
