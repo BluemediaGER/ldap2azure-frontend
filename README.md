@@ -1,4 +1,9 @@
 # ldap2azure-frontend
+
+| :zap: NOTICE               |
+|:---------------------------|
+| I originally developed ldap2azure for my vocational school to simplify the management of Office 365 user accounts there. They now use a different solution and I no longer have any use for the project. Unfortunately, I also lack the time to further maintain ldap2azure. Therefore I will archive the project for the time being. However, feel free to fork it if you are interested in it! |
+
 ldap2azure-frontend is, as the name already suggests, a reference or example implementation for a frontend which can be used with my project [ldap2azure](https://github.com/BluemediaGER/ldap2azure).
 
 The frontend allows easy administration and monitoring of the user synchronization of ldap2azure. It also allows you to easily resolve synchronization conflicts and manage API keys and users.
